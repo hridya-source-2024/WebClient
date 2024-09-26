@@ -26,7 +26,9 @@ const SalesList = () => {
           <tr>
             <th>Sale ID</th>
             <th>Date</th>
+            <th>Quantity</th>
             <th>Total Amount</th>
+            <th>Total Tax Amount</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -34,8 +36,10 @@ const SalesList = () => {
           {transactions.map((transaction) => (
             <tr key={transaction.id}>
               <td>{transaction.id}</td>
-              <td>{transaction.date}</td>
+              <td>{new Date(transaction.saleDate).toLocaleDateString()}</td>
+              <td>{transaction.saleTransactions.reduce((total, sale) => total + sale.quantity, 0)}</td>
               <td>{transaction.totalAmount}</td>
+              <td>{transaction.totalTaxAmount}</td>
               <td>
                 <Link to={`/view-sale/${transaction.id}`}>View</Link>
               </td>

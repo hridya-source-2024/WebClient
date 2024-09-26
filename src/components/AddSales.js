@@ -1,63 +1,86 @@
 import React, { useState } from 'react';
-import { Button, TextField, Paper } from '@mui/material';
-import { createSale } from '../Services/salesService'; // Import the createSale function
+import { createSale } from '../Services/salesService';
+import { useNavigate } from 'react-router-dom';
 
 const AddSales = () => {
-  const [invoiceNumber, setInvoiceNumber] = useState('');
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [saleDate, setSaleDate] = useState(new Date().toISOString().split("T")[0]); // Default to today
+    const [sales, setSales] = useState([{ productId: '', quantity: '' }]);
+    const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const saleData = {
-      invoiceNumber,
-      totalAmount,
-      saleDate,
+    const handleInputChange = (index, event) => {
+        const { name, value } = event.target;
+        const updatedSales = [...sales];
+        updatedSales[index][name] = value;
+        setSales(updatedSales);
     };
 
-    try {
-      await createSale(saleData); // Call the createSale API function
-      // Redirect or show success message after creating the sale
-      alert('Sale created successfully!');
-    } catch (error) {
-      console.error('Error creating sale:', error);
-      alert('Failed to create sale.');
-    }
-  };
+    const addSale = () => {
+        setSales([...sales, { productId: '', quantity: '' }]);
+    };
 
-  return (
-    <Paper style={{ padding: '20px' }}>
-      <h2>Add Sale</h2>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Invoice Number"
-          value={invoiceNumber}
-          onChange={(e) => setInvoiceNumber(e.target.value)}
-          required
-        />
-        <TextField
-          label="Total Amount"
-          type="number"
-          value={totalAmount}
-          onChange={(e) => setTotalAmount(Number(e.target.value))}
-          required
-        />
-        <TextField
-          label="Sale Date"
-          type="date"
-          value={saleDate}
-          onChange={(e) => setSaleDate(e.target.value)}
-          required
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Save Sale
-        </Button>
-      </form>
-    </Paper>
-  );
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const saleData = {
+            SaleTransactions: sales.map(sale => ({
+                ProductId: parseInt(sale.productId), 
+                Quantity: parseInt(sale.quantity),
+            })),
+        };
+
+        try {
+            const result = await createSale(saleData); 
+            console.log(`Sale successfully recorded:`, result.data);
+            navigate('/sales'); 
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+    };
+
+    return (
+        <div className="container-form">
+            <h1>Enter Sale Transactions</h1>
+            <form onSubmit={handleSubmit}>
+                {sales.map((sale, index) => (
+                    <div key={index} className="form-group">
+                        <label>Product ID:</label>
+                        <input
+                            type="text"
+                            name="productId"
+                            value={sale.productId}
+                            onChange={(e) => handleInputChange(index, e)}
+                            placeholder="Product ID"
+                            required
+                        />
+                        <label>Quantity:</label>
+                        <input
+                            type="text"
+                            name="quantity"
+                            value={sale.quantity}
+                            onChange={(e) => handleInputChange(index, e)}
+                            placeholder="Quantity"
+                            required
+                        />
+                    </div>
+                ))}
+                <div className="form-group button-group">
+                    <button type="button" onClick={addSale} className="add-button">
+                        Add Another Product
+                    </button>
+                    <button type="submit" className="save-button">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
 };
 
 export default AddSales;
+
+
+
+
+
 
 
 

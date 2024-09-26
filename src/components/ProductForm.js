@@ -119,7 +119,7 @@ const ProductForm = () => {
           </label>
         </div>
         <div className="form-group button-group">
-          <button type="button" onClick={() => navigate('/')} className="cancel-button">Cancel</button>
+          <button type="button" onClick={() => navigate('/products')} className="cancel-button">Cancel</button>
           <button type="submit" className="save-button">
             {isEdit ? 'Update' : 'Add'} Product
           </button>

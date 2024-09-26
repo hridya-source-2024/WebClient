@@ -1,6 +1,6 @@
 .container {
   padding: 20px;
-  max-width: 900px;
+  max-width: 100%;
   margin: auto;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -206,3 +206,8 @@ h2 {
   color: #555;
   margin-top: 8px;
 }
+
+.button-spacing {
+  margin-right: 8rem; /* Adjust the value as needed */
+}
+
