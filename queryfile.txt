@@ -1,0 +1,29 @@
+CREATE TABLE "Products" (
+    "Id" SERIAL PRIMARY KEY,
+    "Name" VARCHAR(100) NOT NULL,
+    "Price" DECIMAL(10, 2) NOT NULL,
+    "TaxRate" INT NOT NULL,
+    "ProductType" VARCHAR(50) NOT NULL,
+    "IsImported" BOOLEAN NOT NULL,
+    "ImportDuty" DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE "Sales" (
+ "Id" SERIAL PRIMARY KEY,
+  "SaleDate" TIMESTAMP NOT NULL,
+   "InvoiceNumber" VARCHAR(50) NOT NULL UNIQUE,
+   "NetAmount" DECIMAL(10, 2) NOT NULL,
+   "TotalTaxAmount" DECIMAL(10, 2) NOT NULL,
+   "TotalImportDuty" DECIMAL(10, 2) NOT NULL,
+   "TotalAmount" DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE "SaleTransactions" (
+    "Id" SERIAL PRIMARY KEY,
+    "ProductId" INT REFERENCES "Products"("Id"),
+    "SaleId" INT REFERENCES "Sales"("Id"),
+    "Quantity" INT NOT NULL,
+    "Amount" DECIMAL(10, 2) NOT NULL,
+    "Tax" DECIMAL(10, 2) NOT NULL,
+    "ImportDuty" DECIMAL(10, 2) NOT NULL
+);
